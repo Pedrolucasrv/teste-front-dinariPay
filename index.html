@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-7 bg-white  py-5">
                 <div class="rounded position-relative d-flex flex-column justify-content-center h-100 w-100 ">
-                    <div class="text-center pb-5 ">
+                    <div class="text-center pb-5  heading-custom">
                         <h2 class="display-3 font-weight-normal">Cadastro</h2>
                         <p class="text-muted">Para prosseguir insira seus dados.</p>
                     </div>
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="input-holder">
                                     <label for="cpf" >CPF</label>
-                                    <input type="text" name="cpf" id="cpf" placeholder="xxx.xxx.xxx-xx" size="14" required>
+                                    <input type="text" name="cpf" id="cpf" placeholder="xxx.xxx.xxx-xx" size="14" minlength="14" required>
                                     <span class="error-text">por favor preencha este campo!</span>
                                 </div>
                                 <div class="input-holder">
@@ -87,14 +87,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row col-12 position-absolute congratulations">
-                            <div>
-
-                                <p class="display-3">Parabéns!</p>
-                                <p class="text-muted"> O cadastro foi realizado com sucesso</p>
-                            </div>
-                        </div>
                     </form>
+                    <div class="row col-12 position-absolute congratulations">
+                        <div>
+
+                            <p class="display-3">Parabéns!</p>
+                            <p class="text-muted">cadastro enviado</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
