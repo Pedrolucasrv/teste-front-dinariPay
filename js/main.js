@@ -1,13 +1,9 @@
-const setGender = (val) => {
-    return `${val}`;
-}
-
 
 
 $(document).ready(function () { 
 
-    var $cpf = $("#cpf");
-    $cpf.mask('000.000.000-00', {reverse: false});
+    var cpfInput = $("#cpf");
+    cpfInput.mask('000.000.000-00', {reverse: false});
 
     $(' input').blur(function(){
         if(!$(this).val()){
@@ -27,13 +23,25 @@ $(document).ready(function () {
         }
     });
 
+    $('#password').blur(function(){
+        if($('#password').val() === $('#password-confirm').val()){
+            $('#password-confirm').next().removeClass("d-block");
+            $('#password-confirm').removeClass("error");
+        } else{
+            $('#password-confirm').next().addClass("d-block");
+        }
+    });
+
 });
+
+//limpa o formulário
 
 const resetForm = (e) => {
     e.preventDefault();
     document.querySelector("form").reset(); 
 }
 
+// validaçao generica
 
 const validate = (val) => {
 
@@ -46,6 +54,36 @@ const validate = (val) => {
         return null;
     }
 }
+
+//valida genero
+
+const validateGender = () => {
+    input = $("input[name='gender']:checked").val();
+    if (input) {
+        $(".gender-error").removeClass("d-block");
+        return input
+    }else{
+        $(".gender-error").addClass("d-block");
+        return input
+    }
+}
+
+//validaçao do email
+
+const isEmail = () => {
+    email = $("#email").val()
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (regex.test(email)){
+        $(".email-error").removeClass("d-block")
+        return regex.test(email);
+    }else{
+        $(".email-error").addClass("d-block")
+        return regex.test(email);
+    }
+  }
+
+
+//validaçao das senhas
 
 const validatePassword = (val) => {
     
@@ -66,62 +104,77 @@ const validatePassword = (val) => {
     
 }
 
-const validateCpf = (val) => {
 
-    var lenght = document.getElementById(`${val}`).innerHTML.length;
-    
-    console.log(lenght)
-    if (lenght < 15 && lenght > 13){
+//checagem do cpf
+const validateCpfInput = () => {
+    e = $("#cpf").val()
+    cpf = e.replace(",","");
+    if (validateCpf(cpf)){
+        $(".cpf-error").removeClass("d-block");
         return true;
     }else{
-        return false;
-        }
+        $(".cpf-error").addClass("d-block");
+        return false
     }
+}
+
+const validateCpf = (cpf) => {
+    
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf == '') return false;
+    if (cpf.length != 11 ||
+        cpf == "00000000000" ||
+        cpf == "11111111111" ||
+        cpf == "22222222222" ||
+        cpf == "33333333333" ||
+        cpf == "44444444444" ||
+        cpf == "55555555555" ||
+        cpf == "66666666666" ||
+        cpf == "77777777777" ||
+        cpf == "88888888888" ||
+        cpf == "99999999999")
+        return false;
+    add = 0;
+    for (i = 0; i < 9; i++)
+        add += parseInt(cpf.charAt(i)) * (10 - i);
+    rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11)
+        rev = 0;
+    if (rev != parseInt(cpf.charAt(9)))
+        return false;
+    add = 0;
+    for (i = 0; i < 10; i++)
+        add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11)
+        rev = 0;
+    if (rev != parseInt(cpf.charAt(10)))
+        return false;
+    return true;
+}
+
+//confirmar
 
 const submitForm = (e) => {
     e.preventDefault();
 
-    let data = {
+    let isValid = {
         name: validate("#name"),
-        cpf: validateCpf("cpf"),
+        cpf: validateCpfInput(),
         nascimento: validate( "#born-date" ),
-        genero:  validate("input[name='gender']:checked"),
-        email: validate( "#email" ),
+        genero:  validateGender(),
+        email: isEmail( $("#email").val() ),
         senha: validate( "#password" ),
         senhaConfirm: validatePassword( "#password-confirm" )
     }
-    var tl = gsap.timeline;
     
-    console.log(data.cpf)
     
-    gsap.to('form', {y: 50, opacity: 0, duration: 1})
-    gsap.to('.heading-custom', {y: 50, opacity: 0, duration: 1})
-    gsap.to('form', {display: "none"})
-    gsap.to('.heading-custom', {display: "none"})
-    gsap.to('.congratulations', {display: 'block', opacity: 100, delay: 1},  )
-    if( data.name && data.cpf.lenght < 19  ){
+    if( isValid.name && isValid.cpf && isValid.email && isValid.genero && isValid.nascimento && isValid.senha && isValid.senhaConfirm ){
+        gsap.to('form', {y: 50, opacity: 0, duration: 1})
+        gsap.to('.heading-custom', {y: 50, opacity: 0, duration: 1})
+        gsap.to('form', {display: "none"})
+        gsap.to('.heading-custom', {display: "none"})
+        gsap.to('.congratulations', {display: 'block', opacity: 100, delay: 1},  )
     }
 
-    console.log(data)
 };
-
-function TestaCPF(strCPF) {
-    var Soma;
-    var Resto;
-    Soma = 0;
-  if (strCPF == "00000000000") return false;
-
-  for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
-  Resto = (Soma * 10) % 11;
-
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
-
-  Soma = 0;
-    for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
-    Resto = (Soma * 10) % 11;
-
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
-    return true;
-}

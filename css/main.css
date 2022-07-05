@@ -93,8 +93,7 @@ background: linear-gradient(128deg, rgba(166,34,0,1) 0%, rgba(218,65,0,1) 69%);
 }
 
 .congratulations{
-    top: 50%;
     display: none;
     opacity: 0;
-
+    text-align: center;
 }
