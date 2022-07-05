@@ -41,7 +41,7 @@ const resetForm = (e) => {
     document.querySelector("form").reset(); 
 }
 
-// validaçao generica
+// validaçao generica (verifica se o campo é vazio ou nao)
 
 const validate = (val) => {
 
@@ -53,6 +53,24 @@ const validate = (val) => {
         $(`${val}`).next().addClass('d-block')
         return null;
     }
+}
+
+
+// validaçao nome
+const validateName = () => {
+
+    input = $(`#name`).val()
+
+
+    var expressao = /^[A-Za-z\s]+$/;
+    if(!expressao.test(input)){
+        $(".name-error").addClass("d-block");
+        return false
+    }else{
+        $(".name-error").removeClass("d-block");
+        return true
+    }
+   
 }
 
 // validaçao data
@@ -75,13 +93,20 @@ const validateDate = () => {
     var month = now.getMonth() + 1;
     var year = now.getFullYear();
 
-    d1 = `${diaSelecionado}/${mesSelecionado}/${anoSelecionado}`
-    d2 = `${day}/${month}/${year}`
+    d1 = `${anoSelecionado}-${mesSelecionado}-${diaSelecionado}`
+    d2 = `${year}-${month}-${day}`
+
+    if(anoSelecionado && mesSelecionado && diaSelecionado){
+        return dateCompare(d1, d2);
+    }else{
+        $(".date-error").addClass("d-block");
+         return false
+        }
 
     console.log(d1)
     console.log(d2)
     
-    return dateCompare(d1, d2);
+    
 
 }
 
@@ -89,13 +114,14 @@ function dateCompare(d1, d2){
     const date1 = new Date(d1);
     const date2 = new Date(d2);
 
-    console.log(date1)
-    console.log(date2)
     if(date1.getTime() > date2.getTime()){
+        $(".date-error").addClass("d-block");
         return false;
     } else if(date1.getTime() < date2.getTime()){
+        $(".date-error").removeClass("d-block");
         return true;
     } else{
+        $(".date-error").removeClass("d-block");
         return true;
     }
 }
@@ -204,7 +230,7 @@ const submitForm = (e) => {
     e.preventDefault();
 
     let isValid = {
-        name: validate("#name"),
+        name: validateName("#name"),
         cpf: validateCpfInput(),
         nascimento: validateDate(),
         genero:  validateGender(),
