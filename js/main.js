@@ -55,6 +55,51 @@ const validate = (val) => {
     }
 }
 
+// validaçao data
+
+const validateDate = () => {
+
+    input = $(`#born-date`).val()
+
+    data = new Array
+    data = input.split('-');
+
+    var diaSelecionado = data[2]
+    var mesSelecionado = data[1]
+    var anoSelecionado = data[0]
+
+
+
+    var now = new Date;
+    var day =  now.getDate();
+    var month = now.getMonth() + 1;
+    var year = now.getFullYear();
+
+    d1 = `${diaSelecionado}/${mesSelecionado}/${anoSelecionado}`
+    d2 = `${day}/${month}/${year}`
+
+    console.log(d1)
+    console.log(d2)
+    
+    return dateCompare(d1, d2);
+
+}
+
+function dateCompare(d1, d2){
+    const date1 = new Date(d1);
+    const date2 = new Date(d2);
+
+    console.log(date1)
+    console.log(date2)
+    if(date1.getTime() > date2.getTime()){
+        return false;
+    } else if(date1.getTime() < date2.getTime()){
+        return true;
+    } else{
+        return true;
+    }
+}
+
 //valida genero
 
 const validateGender = () => {
@@ -161,14 +206,15 @@ const submitForm = (e) => {
     let isValid = {
         name: validate("#name"),
         cpf: validateCpfInput(),
-        nascimento: validate( "#born-date" ),
+        nascimento: validateDate(),
         genero:  validateGender(),
         email: isEmail( $("#email").val() ),
         senha: validate( "#password" ),
         senhaConfirm: validatePassword( "#password-confirm" )
     }
     
-    
+    console.log(isValid.nascimento)
+
     if( isValid.name && isValid.cpf && isValid.email && isValid.genero && isValid.nascimento && isValid.senha && isValid.senhaConfirm ){
         gsap.to('form', {y: 50, opacity: 0, duration: 1})
         gsap.to('.heading-custom', {y: 50, opacity: 0, duration: 1})
