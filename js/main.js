@@ -103,8 +103,7 @@ const validateDate = () => {
          return false
         }
 
-    console.log(d1)
-    console.log(d2)
+   
     
     
 
@@ -239,7 +238,6 @@ const submitForm = (e) => {
         senhaConfirm: validatePassword( "#password-confirm" )
     }
     
-    console.log(isValid.nascimento)
 
     if( isValid.name && isValid.cpf && isValid.email && isValid.genero && isValid.nascimento && isValid.senha && isValid.senhaConfirm ){
         gsap.to('form', {y: 50, opacity: 0, duration: 1})
